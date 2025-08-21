@@ -1,0 +1,48 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "alireza",
+      "username": "ali",
+      "crime": 0,
+      "role": "ADMIN"
+    },
+    {
+      "id": 2,
+      "name": "sasan",
+      "username": "sasi",
+      "crime": 0,
+      "role": "ADMIN"
+    },
+    {
+      "id": 3,
+      "name": "fateme rezari",
+      "username": "fati",
+      "crime": 0,
+      "role": "USER"
+    }
+  ],
+  "books": [
+    {
+      "id": 1,
+      "title": "golstan",
+      "author": "sadi",
+      "price": 23000,
+      "free": 1
+    },
+    {
+      "id": 2,
+      "title": "golsatn",
+      "author": "sadi",
+      "price": 30000,
+      "free": 0
+    },
+    {
+      "id": 3,
+      "title": "boof kor",
+      "author": "sadegh hedayat",
+      "price": 20000,
+      "free": 1
+    }
+  ]
+}
