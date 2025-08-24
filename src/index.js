@@ -74,6 +74,33 @@ const server = http.createServer((req, res) => {
         }
       });
     });
+  } else if (req.method == 'PUT' && req.url == '/api/books') {
+    // update book
+    const parseUrl = url.parse(req.url, true);
+    const bookId = parseUrl.query.id;
+    let bookNewInfo = '';
+    req.on('data', (data) => {
+      bookNewInfo = bookNewInfo + data.toString();
+    });
+    req.on('end', () => {
+      const reqBody = JSON.parse(bookNewInfo);
+      db.books.forEach((book) => {
+        if (book.id == Number(bookId)) {
+          book.title = reqBody.title;
+          book.author = reqBody.author;
+          book.price = reqBody.price;
+        }
+      });
+      fs.writeFile('./db.json', JSON.stringify(db), (err) => {
+        if (err) {
+          throw err.message;
+        } else {
+          res.writeHead(200, { 'content-type': 'application/json' });
+          res.write(JSON.stringify({ message: 'book updated' }));
+          res.end();
+        }
+      });
+    });
   }
 });
 
