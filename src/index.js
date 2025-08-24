@@ -2,16 +2,14 @@ const http = require('http');
 const fs = require('fs');
 const url = require('url');
 const db = require('../db.json');
-const { json } = require('stream/consumers');
 
-console.log(db);
 // default port
 const port = 4000;
 
 const server = http.createServer((req, res) => {
-  if (req.method == 'GET' || req.url == '/api/users') {
+  if (req.method == 'GET' && req.url == '/api/users') {
     // get all users
-    fs.readFile('../db.json', (err, db) => {
+    fs.readFile('./db.json', (err, db) => {
       if (err) {
         throw err;
       } else {
@@ -22,9 +20,9 @@ const server = http.createServer((req, res) => {
         res.end();
       }
     });
-  } else if (req.method == 'GET' || req.url == '/api/books') {
+  } else if (req.method == 'GET' && req.url == '/api/books') {
     // get all books
-    fs.readFile('../db.json', (err, db) => {
+    fs.readFile('./db.json', (err, db) => {
       if (err) {
         throw err;
       } else {
@@ -35,7 +33,7 @@ const server = http.createServer((req, res) => {
         res.end();
       }
     });
-  } else if (req.method == 'DELETE') {
+  } else if (req.method == 'DELETE' && req.url == '/api/books') {
     // delete book
     const parsUrl = url.parse(req.url, true);
     console.log(parsUrl.query.id);
@@ -51,6 +49,31 @@ const server = http.createServer((req, res) => {
       res.write(JSON.stringify({ message: 'book removed!' })),
       res.end()
     );
+  } else if (req.method == 'POST' && req.url == '/api/books') {
+    // add new book
+    let book = '';
+    req.on('data', (data) => {
+      book = book + data.toString();
+    });
+    req.on('end', () => {
+      // console.log(JSON.parse(book));
+      const newBook = {
+        id: crypto.randomUUID(),
+        ...JSON.parse(book),
+        free: 1,
+      };
+      // console.log(newBook)
+      db.books.push(newBook);
+      fs.writeFile('./db.json', JSON.stringify(db), (err) => {
+        if (err) {
+          throw err.message;
+        } else {
+          res.writeHead(200, { 'content-type': 'application/json' });
+          res.write(JSON.stringify({ message: 'new book created' }));
+          res.end('new book add');
+        }
+      });
+    });
   }
 });
 
