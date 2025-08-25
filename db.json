@@ -4,6 +4,7 @@
       "id": 1,
       "name": "alireza",
       "username": "ali",
+      "email": "exsample@gmail.com",
       "crime": 0,
       "role": "ADMIN"
     },
@@ -11,6 +12,7 @@
       "id": 2,
       "name": "sasan",
       "username": "sasi",
+      "email": "exsample@gmail.com",
       "crime": 0,
       "role": "ADMIN"
     },
@@ -18,8 +20,16 @@
       "id": 3,
       "name": "fateme rezari",
       "username": "fati",
+      "email": "exsample@gmail.com",
       "crime": 0,
       "role": "USER"
+    },
+    {
+      "id": "65f02d52-f894-4a48-aafc-d38ad89f6082",
+      "name": "saman",
+      "username": "sasa",
+      "email": "exsample@gmail.com",
+      "crime": 0
     }
   ],
   "books": [

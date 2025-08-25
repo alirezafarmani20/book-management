@@ -101,6 +101,32 @@ const server = http.createServer((req, res) => {
         }
       });
     });
+  } else if (req.method == 'POST' && req.url == '/api/users') {
+    // crete new user
+    let user = '';
+    req.on('data', (data) => {
+      user = user + data.toString();
+    });
+    req.on('end', () => {
+      const { name, username, email } = JSON.parse(user);
+      const newUser = {
+        id: crypto.randomUUID(),
+        name,
+        username,
+        email,
+        crime: 0,
+      };
+      db.users.push(newUser);
+      fs.writeFile('./db.json', JSON.stringify(db), (err) => {
+        if (err) {
+          throw err.message();
+        } else {
+          res.writeHead(200, { 'content-type': 'application/json' });
+          res.write(JSON.stringify({ message: 'user created' }));
+          res.end();
+        }
+      });
+    });
   }
 });
 
