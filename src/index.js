@@ -119,7 +119,7 @@ const server = http.createServer((req, res) => {
       db.users.push(newUser);
       fs.writeFile('./db.json', JSON.stringify(db), (err) => {
         if (err) {
-          throw err.message();
+          throw err.message;
         } else {
           res.writeHead(200, { 'content-type': 'application/json' });
           res.write(JSON.stringify({ message: 'user created' }));
@@ -146,8 +146,8 @@ const server = http.createServer((req, res) => {
         if (err) {
           throw err.message();
         } else {
-          res.writeHead(200, { 'content-type': 'application/json' }),
-          res.write(JSON.stringify({ message: 'crime set successfully' }));
+          res.writeHead(200, { 'content-type': 'application/json' });
+          res.write(JSON.stringify({ message: 'user crime updated' }));
           res.end();
         }
       });
