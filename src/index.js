@@ -127,6 +127,31 @@ const server = http.createServer((req, res) => {
         }
       });
     });
+  } else if (req.method == 'PUT' && req.url.startsWith('/api/users')) {
+    // edit user crime
+    const parseUrl = url.parse(req.url, true);
+    const userId = parseUrl.query.id;
+    let reqBody = '';
+    req.on('data', (data) => {
+      reqBody = reqBody + data.toString();
+    });
+    req.on('end', () => {
+      const { crime } = JSON.parse(reqBody);
+      db.users.forEach((user) => {
+        if (user.id == Number(userId)) {
+          user.crime = crime;
+        }
+      });
+      fs.watchFile('./db.json', JSON.stringify(db), (err) => {
+        if (err) {
+          throw err.message();
+        } else {
+          res.writeHead(200, { 'content-type': 'application/json' }),
+          res.write(JSON.stringify({ message: 'crime set successfully' }));
+          res.end();
+        }
+      });
+    });
   }
 });
 
