@@ -109,23 +109,38 @@ const server = http.createServer((req, res) => {
     });
     req.on('end', () => {
       const { name, username, email } = JSON.parse(user);
-      const newUser = {
-        id: crypto.randomUUID(),
-        name,
-        username,
-        email,
-        crime: 0,
-      };
-      db.users.push(newUser);
-      fs.writeFile('./db.json', JSON.stringify(db), (err) => {
-        if (err) {
-          throw err.message;
-        } else {
-          res.writeHead(200, { 'content-type': 'application/json' });
-          res.write(JSON.stringify({ message: 'user created' }));
-          res.end();
-        }
+      const isUserExsit = db.users.find((user) => {
+        user.email == email || user.username == username;
       });
+      if (isUserExsit) {
+        res.writeHead(409, { 'content-type': 'application/json' });
+        res.write(JSON.stringify({ message: 'user is exist' }));
+        res.end();
+      }
+      // set validator for new user
+      else if (name == '' || username == '' || email == '') {
+        res.writeHead(422, { 'content-type': 'application/json' });
+        res.write(JSON.stringify({ message: 'user is not valid' }));
+        res.end();
+      } else {
+        const newUser = {
+          id: crypto.randomUUID(),
+          name,
+          username,
+          email,
+          crime: 0,
+        };
+        db.users.push(newUser);
+        fs.writeFile('./db.json', JSON.stringify(db), (err) => {
+          if (err) {
+            throw err.message;
+          } else {
+            res.writeHead(200, { 'content-type': 'application/json' });
+            res.write(JSON.stringify({ message: 'user created' }));
+            res.end();
+          }
+        });
+      }
     });
   } else if (req.method == 'PUT' && req.url.startsWith('/api/users')) {
     // edit user crime
@@ -144,7 +159,7 @@ const server = http.createServer((req, res) => {
       });
       fs.watchFile('./db.json', JSON.stringify(db), (err) => {
         if (err) {
-          throw err.message();
+          throw err.message;
         } else {
           res.writeHead(200, { 'content-type': 'application/json' });
           res.write(JSON.stringify({ message: 'user crime updated' }));
