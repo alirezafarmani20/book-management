@@ -129,6 +129,7 @@ const server = http.createServer((req, res) => {
           username,
           email,
           crime: 0,
+          role: '',
         };
         db.users.push(newUser);
         fs.writeFile('./db.json', JSON.stringify(db), (err) => {
@@ -140,6 +141,25 @@ const server = http.createServer((req, res) => {
             res.end();
           }
         });
+      }
+    });
+  } else if ((req.method == 'PUT' && req, url == '/api/users/upgrade')) {
+    // update use role
+    // get user id
+    const parseUrl = url.parse(req.url, true);
+    const userId = parseUrl.query.id;
+    db.users.forEach((user) => {
+      if (user.id == Number(userId)) {
+        user.role = 'ADMIN';
+      }
+    });
+    fs.writeFile('./db.json', JSON.stringify(db), (err) => {
+      if (err) {
+        throw err.message;
+      } else {
+        res.writeHead(200, { 'content-type': 'application/json' });
+        res.write(JSON.stringify({ message: 'user role updated' }));
+        res.end();
       }
     });
   } else if (req.method == 'PUT' && req.url.startsWith('/api/users')) {
